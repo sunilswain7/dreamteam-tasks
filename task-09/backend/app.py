@@ -36,10 +36,10 @@ def add_review():
 @app.route('/bookmark', methods=['POST'])
 def toggle_bookmark():
     data = request.json
-    user_id = 1  # Replace with session user ID (after implementing user auth)
+    user_id = 1 
     movie_id = data.get('movie_id')
 
-    # Check if the movie is already bookmarked
+    
     bookmark = Bookmark.query.filter_by(user_id=user_id, movie_id=movie_id).first()
     if bookmark:
         db.session.delete(bookmark)
@@ -53,14 +53,14 @@ def toggle_bookmark():
     
 @app.route('/watchlist', methods=['GET'])
 def get_watchlist():
-    user_id = 1  # Replace with session user ID (after implementing user auth)
+    user_id = 1  
     bookmarks = Bookmark.query.filter_by(user_id=user_id).all()
 
-    # Return a list of bookmarked movie IDs
+    
     movie_ids = [bookmark.movie_id for bookmark in bookmarks]
     return jsonify({"success": True, "movies": movie_ids})
 
-#login and register
+
 
 @app.route('/register', methods=['POST'])
 def register():
@@ -69,11 +69,11 @@ def register():
     email = data['email']
     password = data['password']
 
-    # Check if email is already registered
+    
     if User.query.filter_by(email=email).first():
         return jsonify({'success': False, 'message': 'Email already registered'}), 400
 
-    # Hash the password for security
+    
     password_hash = generate_password_hash(password)
     new_user = User(username=username, email=email, password_hash=password_hash)
     db.session.add(new_user)
@@ -86,12 +86,10 @@ def login():
     email = data['email']
     password = data['password']
 
-    # Fetch the user by email
     user = User.query.filter_by(email=email).first()
     if not user or not check_password_hash(user.password_hash, password):
         return jsonify({'success': False, 'message': 'Invalid email or password'}), 401
 
-    # Login successful
     return jsonify({'success': True, 'message': 'Login successful', 'user_id': user.id}), 200
 
 @app.route('/check_user', methods=['POST'])
