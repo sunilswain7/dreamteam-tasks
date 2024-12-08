@@ -1,0 +1,1 @@
+Sucessfully installed Ubuntu :D
